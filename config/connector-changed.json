@@ -26,7 +26,5 @@
   "transforms.moveHeadersToValue.type": "io.debezium.transforms.HeaderToValue",
   "transforms.moveHeadersToValue.headers": "schemaId",
   "transforms.moveHeadersToValue.fields": "schema_id",
-  "transforms.moveHeadersToValue.operation": "copy",
-  "transforms.moveHeadersToValue.predicate": "isTombstone",
-  "transforms.moveHeadersToValue.negate": "true"
+  "transforms.moveHeadersToValue.operation": "copy"
 }
