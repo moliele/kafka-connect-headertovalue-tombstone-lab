@@ -135,7 +135,7 @@ docker compose run --rm \
 Connector logs:
 
 ```bash
-docker compose logs connect | grep -E "HeaderToValue|Only Struct|null|tombstone"
+docker compose logs connect | grep "Tombstone k1 arrived and will be skipped"
 ```
 
 FileStream output:
@@ -148,16 +148,18 @@ cat out/filestream-changed.txt
 
 - the normal Avro message should be written successfully
 - the tombstone should not break the connector
-- the SMT chain should be skipped for tombstones
+- the SMT HoistField chain should be skipped for tombstones
+- `HeaderToValue` should skip the tombstone directly
 
 ## Why it works
 
-The change does not make `HeaderToValue` support tombstones.
+The key point is that `HoistField`is excluded for tombstones.
 
-Instead, it uses `RecordIsTombstone` so that:
+Instead, it uses `RecordIsTombstone` so that means:
 
 - normal messages still go through `HoistField` and `HeaderToValue`
-- tombstones bypass those SMTs entirely
+- tombstones do not go through `HoistField`
+- `HeaderToValue` receives the original tombstone and skips it on its own
 
 That preserves the delete semantics of tombstones while avoiding the failing transformation path.
 
