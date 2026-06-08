@@ -1,0 +1,24 @@
+{
+  "name": "fs-h2v-repro",
+  "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+  "tasks.max": "1",
+  "topics": "purchase.demo",
+  "file": "/tmp/out/filestream-repro.txt",
+
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "value.converter.schema.registry.url": "http://schema-registry:8081",
+
+  "errors.tolerance": "all",
+  "errors.log.enable": "true",
+  "errors.log.include.messages": "true",
+
+  "transforms": "wrapValue,moveHeadersToValue",
+  "transforms.wrapValue.type": "org.apache.kafka.connect.transforms.HoistField$Value",
+  "transforms.wrapValue.field": "__payload",
+
+  "transforms.moveHeadersToValue.type": "io.debezium.transforms.HeaderToValue",
+  "transforms.moveHeadersToValue.headers": "schemaId",
+  "transforms.moveHeadersToValue.fields": "schema_id",
+  "transforms.moveHeadersToValue.operation": "copy"
+}
