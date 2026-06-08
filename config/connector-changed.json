@@ -1,0 +1,32 @@
+{
+  "name": "fs-h2v-changed",
+  "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+  "tasks.max": "1",
+  "topics": "purchase.demo",
+  "file": "/tmp/out/filestream-changed.txt",
+
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "value.converter.schema.registry.url": "http://schema-registry:8081",
+
+  "errors.tolerance": "all",
+  "errors.log.enable": "true",
+  "errors.log.include.messages": "true",
+
+  "predicates": "isTombstone",
+  "predicates.isTombstone.type": "org.apache.kafka.connect.transforms.predicates.RecordIsTombstone",
+
+  "transforms": "wrapValue,moveHeadersToValue",
+
+  "transforms.wrapValue.type": "org.apache.kafka.connect.transforms.HoistField$Value",
+  "transforms.wrapValue.field": "__payload",
+  "transforms.wrapValue.predicate": "isTombstone",
+  "transforms.wrapValue.negate": "true",
+
+  "transforms.moveHeadersToValue.type": "io.debezium.transforms.HeaderToValue",
+  "transforms.moveHeadersToValue.headers": "schemaId",
+  "transforms.moveHeadersToValue.fields": "schema_id",
+  "transforms.moveHeadersToValue.operation": "copy",
+  "transforms.moveHeadersToValue.predicate": "isTombstone",
+  "transforms.moveHeadersToValue.negate": "true"
+}
